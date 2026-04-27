@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
 public class LoanService{
@@ -34,6 +35,10 @@ public class LoanService{
     public Loan findById(int id) {
         return loanRepository.findById(id)
                 .orElseThrow(() -> new LoanNotFoundException("Loan not found: " + id));
+    }
+
+    public List<Loan> findAll(){
+        return loanRepository.findAll();
     }
 
     public void borrowBook(int bookId, int memberId){

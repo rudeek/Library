@@ -35,6 +35,10 @@ public class MemberService implements Manageable<Member>{
                 .orElseThrow(() -> new MemberNotFoundException("Member not found: " + id));
     }
 
+    public List<Member> findAll(){
+        return memberRepository.findAll();
+    }
+
     public List<Member> findByName(String name){
         return memberRepository.findByName(name);
     }

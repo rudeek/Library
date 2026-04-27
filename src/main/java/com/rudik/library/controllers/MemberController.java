@@ -28,6 +28,11 @@ public class MemberController {
         memberService.remove(id);
     }
 
+    @GetMapping()
+    public List<Member> getAllMembers(){
+        return memberService.findAll();
+    }
+
     @GetMapping("/{id}")
     public Member getMember(@PathVariable int id){
         return memberService.findById(id);

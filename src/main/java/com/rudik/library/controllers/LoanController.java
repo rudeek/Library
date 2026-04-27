@@ -5,6 +5,8 @@ import com.rudik.library.services.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/loans")
 public class LoanController {
@@ -23,6 +25,11 @@ public class LoanController {
     @GetMapping("/{id}")
     public Loan getLoan(@PathVariable int id){
         return loanService.findById(id);
+    }
+
+    @GetMapping()
+    public List<Loan> getAllLoans(){
+        return loanService.findAll();
     }
 
     @PostMapping("/borrow")

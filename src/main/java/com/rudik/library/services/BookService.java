@@ -1,13 +1,10 @@
 package com.rudik.library.services;
 
 import com.rudik.library.exceptions.BookNotFoundException;
-import com.rudik.library.exceptions.MemberNotFoundException;
 import com.rudik.library.models.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.rudik.library.repositories.BookRepository;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
