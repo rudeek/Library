@@ -5,6 +5,7 @@ import com.rudik.library.models.Book;
 import com.rudik.library.models.Loan;
 import com.rudik.library.models.Member;
 import com.rudik.library.repositories.LoanRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,15 +33,18 @@ public class LoanService{
         loanRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public Loan findById(int id) {
         return loanRepository.findById(id)
                 .orElseThrow(() -> new LoanNotFoundException("Loan not found: " + id));
     }
 
+    @Transactional(readOnly = true)
     public List<Loan> findAll(){
         return loanRepository.findAll();
     }
 
+    @Transactional
     public void borrowBook(int bookId, int memberId){
         Book book = bookService.findById(bookId);
         Member member = memberService.findById(memberId);
@@ -55,6 +59,7 @@ public class LoanService{
         loanRepository.save(loan);
     }
 
+    @Transactional
     public void returnBook(int loanId){
         Loan loan = findById(loanId);
 
