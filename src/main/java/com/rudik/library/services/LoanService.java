@@ -1,6 +1,7 @@
 package com.rudik.library.services;
 
 import com.rudik.library.exceptions.*;
+import com.rudik.library.factories.NotificationFactory;
 import com.rudik.library.models.Book;
 import com.rudik.library.models.Loan;
 import com.rudik.library.models.Member;
@@ -18,13 +19,15 @@ public class LoanService{
     private final LoanRepository loanRepository;
     private final BookService bookService;
     private final MemberService memberService;
+    private final NotificationFactory notificationFactory;
     private static final double FINE_PER_DAY = 1.0;
 
     @Autowired
-    public LoanService(LoanRepository loanRepository, BookService bookService, MemberService memberService){
+    public LoanService(LoanRepository loanRepository, BookService bookService, MemberService memberService, NotificationFactory notificationFactory){
         this.loanRepository = loanRepository;
         this.bookService = bookService;
         this.memberService = memberService;
+        this.notificationFactory = notificationFactory;
     }
 
     public void remove(int id) {
@@ -57,6 +60,11 @@ public class LoanService{
 
         Loan loan = new Loan(book, member);
         loanRepository.save(loan);
+
+        notificationFactory.createEmailNotification()
+                .send(member.getEmail(), "Dear " + member.getName() +
+                ", you borrowed \"" + book.getTitle() +
+                "\". Due date: " + loan.getDueDate());//email при обычном уведомлении
     }
 
     @Transactional
@@ -73,6 +81,14 @@ public class LoanService{
             double fine = daysLate * FINE_PER_DAY;
             loan.setFine(fine);
             memberService.increaseBalance(loan.getMember().getId(), fine);
+
+            notificationFactory.createSmsNotification()
+                    .send(loan.getMember().getPhone(),"Fine charged: $" + fine
+                            + " for late return of \"" + loan.getBook().getTitle() + "\"");//sms при срочности
+        }else{
+            notificationFactory.createEmailNotification()
+                    .send(loan.getMember().getEmail(),"Thank you " + loan.getMember().getName()
+                            + ", \"" + loan.getBook().getTitle() + "\" returned successfully.");//email при обычном уведомлении
         }
 
         loan.getBook().setAvailable(true);

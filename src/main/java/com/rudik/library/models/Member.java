@@ -22,11 +22,14 @@ public class Member extends Person{
     @Min(value = 0, message = "Balance must be greater than 0!")
     private double balance = 0;
 
+    private String phone;
+
     protected Member() {}
 
-    public Member(String name, String email){
+    public Member(String name, String email, String phone){
         super(name);
         this.email = email;
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -47,6 +50,14 @@ public class Member extends Person{
 
     public int getId(){
         return id;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Override
